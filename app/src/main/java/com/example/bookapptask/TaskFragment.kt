@@ -19,12 +19,14 @@ class TaskFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTaskBinding.inflate(inflater, container, false)
+
         val view = binding.root
 
         val application = requireNotNull(this.activity).application
         val dao = TaskDatabase.getInstance(application).taskDao
         val viewModelFactory = TaskViewModelFactory(dao)
         val viewModel = ViewModelProvider(this, viewModelFactory).get(TasksViewModel::class.java)
+
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -33,9 +35,10 @@ class TaskFragment : Fragment() {
 
         viewModel.tasks.observe(viewLifecycleOwner, Observer {
             it?.let {
-                adapter.data
+                adapter.submitList(it)
             }
         })
+
         return view
     }
 
