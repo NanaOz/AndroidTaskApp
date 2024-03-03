@@ -1,16 +1,14 @@
 package com.example.bookapptask
 
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.widget.CheckBox
+import android.widget.Toast
 import androidx.recyclerview.widget.ListAdapter
-import androidx.cardview.widget.CardView
 import com.example.bookapptask.databinding.TaskItemBinding
 
 
-class TaskItemAdapter : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(TaskDiffItemCallback()) {
+class TaskItemAdapter(val clickListener: (taskId: Long) -> Unit) : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(TaskDiffItemCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
@@ -18,7 +16,7 @@ class TaskItemAdapter : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(Ta
 
     override fun onBindViewHolder(holder: TaskItemViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, clickListener)
     }
 
 //    class TaskItemViewHolder(val rootView: CardView) : RecyclerView.ViewHolder(rootView) {
@@ -37,10 +35,13 @@ class TaskItemAdapter : ListAdapter<Task, TaskItemAdapter.TaskItemViewHolder>(Ta
             }
         }
 
-        fun bind(item: Task) {
+        fun bind(item: Task, clickListener:(taskId: Long) -> Unit) {
 //            taskName.text = item.taskName
 //            taskDone.isChecked = item.taskDone
             binding.task = item
+            binding.root.setOnClickListener {
+                clickListener(item.taskId)
+            }
         }
     }
 }
